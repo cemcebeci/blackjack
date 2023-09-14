@@ -1,6 +1,9 @@
 #include "../src/blackjack.cpp"
 #include <cstdint>
+#include <cstring>
+#include <iostream>
 #include <sys/types.h>
+#include <fstream>
 
 /*
     Blackjack has 4 actions:
@@ -15,12 +18,9 @@
     If that action has an int parameter, we use the next sizeof(int) to pick the input.
 */
 extern "C" int LLVMFuzzerTestOneInput(const char *Data, size_t Size) {
-    if( Size == 0)
-        return 0;
-    
-    Blackjack game((uint8_t)*Data);
-    int offset = 1;
+    Blackjack game(2);
 
+    int offset = 0;
     try {
         while(offset + 1 + sizeof(int) < Size) // we consume at most 1 + sizeof (int) bytes per iteration.
         {
@@ -35,11 +35,11 @@ extern "C" int LLVMFuzzerTestOneInput(const char *Data, size_t Size) {
                     offset += 1;
                     break;
                 case 3:
-                    game.take_card(*(Data + 1));
+                    game.take_card(*(int*)(Data + offset + 1));
                     offset += 1 + sizeof(int);
                     break;
                 case 4:
-                    game.pass(*(Data + 1));
+                    game.pass(*(int*)(Data + offset + 1));
                     offset += 1 + sizeof(int);
                     break;
             }
@@ -49,3 +49,14 @@ extern "C" int LLVMFuzzerTestOneInput(const char *Data, size_t Size) {
     }
     return 0;
 }
+
+#ifndef FUZZING
+int main(int argc, char **argv) {
+    std::ifstream file(argv[1]);
+    char input[4000];
+    file.read(input, 4000);
+    LLVMFuzzerTestOneInput(input, 4000);
+    std::cout << "DONE" << std::endl; 
+    return 0;
+}
+#endif
