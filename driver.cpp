@@ -1,4 +1,4 @@
-#include "blackjack.cpp"
+#include "src/blackjack.cpp"
 
 int main() {
     Blackjack blackjack(2);

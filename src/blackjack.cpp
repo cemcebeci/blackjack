@@ -6,6 +6,7 @@
 #include <vector>
 #include <cassert>
 
+
 class Blackjack 
 {
     public:
@@ -47,8 +48,10 @@ class Blackjack
 
         void take_card(int player)
         {
-            assert(player == current_player);
-            assert(!hand_is_over);
+            require(player == current_player);
+            require(!hand_is_over);
+
+            assert(deck.size() > 0); // We are expecting the fuzzer to find this.
 
             int card = deck.back();
             deck.pop_back();
@@ -59,8 +62,8 @@ class Blackjack
 
         void pass(int player)
         {
-            assert(player == current_player);
-            assert(!hand_is_over);
+            require(player == current_player);
+            require(!hand_is_over);
 
             has_passed.at(player) = true;
             update_current_player();
@@ -68,7 +71,7 @@ class Blackjack
 
         int calculate_winner()
         {
-            assert(hand_is_over);
+            require(hand_is_over);
             int max_points = -1;
             int winner = -1;
             for (int i = 0; i < player_count; i++)
@@ -105,6 +108,8 @@ class Blackjack
             std::cout << "Current player: " << current_player << "\n";
         }
 
+    class BlackjackException : public std::exception {};
+
     private:
         int player_count;
         std::vector<int> deck;
@@ -128,7 +133,7 @@ class Blackjack
 
         int calculate_points(int player)
         {
-            assert(player >= 0 && player < player_count);
+            require(player >= 0 && player < player_count);
 
             int points = 0;
             int num_ones = 0; 
@@ -146,5 +151,10 @@ class Blackjack
                 points += 10;
             }
             return points <=  21 ? points : -1;
+        }
+
+        void require(bool expr)
+        {
+            if(!expr) throw BlackjackException();
         }
 };
