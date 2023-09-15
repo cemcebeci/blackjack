@@ -9,7 +9,7 @@
 #ifndef FUZZING
 #define out std::cout
 #else
-# define std::ostream out = {};
+#define out std::ostream(nullptr)
 #endif
 
 /*
