@@ -2,8 +2,15 @@
 #include <cstdint>
 #include <cstring>
 #include <iostream>
+#include <ostream>
 #include <sys/types.h>
 #include <fstream>
+
+#ifndef FUZZING
+#define out std::cout
+#else
+# define std::ostream out = {};
+#endif
 
 /*
     Blackjack has 4 actions:
@@ -12,7 +19,7 @@
         - take_card(int player)
         - pass(int player)
     
-    We user the first byte to pick the number of players.
+    We use the first byte to pick the number of players.
     We interpret the rest of fuzz input as a sequence of actions taken. 
     We use a byte to pick an action (because I don't want to deal with bits).
     If that action has an int parameter, we use the next sizeof(int) to pick the input.
@@ -24,21 +31,25 @@ extern "C" int LLVMFuzzerTestOneInput(const char *Data, size_t Size) {
     try {
         while(offset + 1 + sizeof(int) < Size) // we consume at most 1 + sizeof (int) bytes per iteration.
         {
-            switch (*(Data + offset) % 4)
+            switch (abs(*(Data + offset) % 4))
             {
                 case 0:
+                    out << "SHUFFLE \n";
                     game.shuffle_deck();
                     offset += 1;
                     break;
                 case 1:
+                    out << "DEAL \n";
                     game.deal();
                     offset += 1;
                     break;
-                case 3:
+                case 2:
+                    out << "DRAW " << *(int*)(Data + offset + 1) << "\n";
                     game.take_card(*(int*)(Data + offset + 1));
                     offset += 1 + sizeof(int);
                     break;
-                case 4:
+                case 3:
+                    out << "PASS " << *(int*)(Data + offset + 1) << "\n";
                     game.pass(*(int*)(Data + offset + 1));
                     offset += 1 + sizeof(int);
                     break;
