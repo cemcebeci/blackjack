@@ -15,7 +15,8 @@ class Blackjack
             player_hands(player_count, std::vector<int>()),
             has_passed(player_count, false),
             current_player(0),
-            hand_is_over(false)
+            hand_is_over(false),
+            dealt(false)
         {
             for (int i = 1; i <= 13; i++)
             {
@@ -34,6 +35,8 @@ class Blackjack
 
         void deal()
         {
+            require(!dealt);
+
             for(int player = 0; player < player_count; player++ )
             {
                 for (int count = 0; count < 2; count ++) // deal two cards to each player.
@@ -44,6 +47,7 @@ class Blackjack
                 }
             }
             
+            dealt = true;
         }
 
         void take_card(int player)
@@ -117,6 +121,7 @@ class Blackjack
         std::vector<bool> has_passed;
         int current_player;
         bool hand_is_over;
+        bool dealt;
 
         void update_current_player()
         {
