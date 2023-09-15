@@ -46,7 +46,7 @@ class Blackjack
                     player_hands.at(player).push_back(card);   
                 }
             }
-            
+
             dealt = true;
         }
 
@@ -54,6 +54,7 @@ class Blackjack
         {
             require(player == current_player);
             require(!hand_is_over);
+            require(dealt);
 
             assert(deck.size() > 0); // We are expecting the fuzzer to find this.
 
@@ -68,6 +69,7 @@ class Blackjack
         {
             require(player == current_player);
             require(!hand_is_over);
+            require(dealt);
 
             has_passed.at(player) = true;
             update_current_player();
