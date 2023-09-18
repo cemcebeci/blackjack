@@ -7,3 +7,6 @@ fuzzer: fuzz_target.cpp
 
 runner: fuzz_target.cpp
 	clang++ fuzz_target.cpp -o runner
+
+clean:
+	rm fuzzer && rm runner && rm crash-*
