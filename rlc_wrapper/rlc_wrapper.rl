@@ -18,11 +18,11 @@ act blackjack(Int num_players):
         while player < num_players:
             if !(has_passed[player] == 1):
                 actions:
-                    act draw(Int p) {p == player}
-                    Blackjack_draw(blackjack, p)	
+                    act draw(Int p1) {p1 == player}
+                    Blackjack_draw(blackjack, p1)	
 
-                    act pass(Int p) {p == player}
-                    Blackjack_pass(blackjack, p)
+                    act pass(Int p2) {p2 == player}
+                    Blackjack_pass(blackjack, p2)
                     pass_count = pass_count + 1
                     has_passed[player] = 1
             player = player + 1
