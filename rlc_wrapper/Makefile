@@ -9,7 +9,7 @@ out/class_to_global_functions.o: class_to_global_functions.cpp
 	clang++ -c class_to_global_functions.cpp -o out/class_to_global_functions.o
 
 out/rlc_wrapper.o: rlc_wrapper.rl
-	$(RLC) rlc_wrapper.rl -o out/rlc_wrapper || true
+	$(RLC) rlc_wrapper.rl -o out/rlc_wrapper -O2 || true
 
 clean:
 	rm out/*
