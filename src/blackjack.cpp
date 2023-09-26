@@ -14,7 +14,6 @@ class Blackjack
             player_count(player_count),
             player_hands(player_count, std::vector<int>()),
             has_passed(player_count, false),
-            current_player(0),
             hand_is_over(false),
             dealt(false)
         {
@@ -52,27 +51,27 @@ class Blackjack
 
         void take_card(int player)
         {
-            require(player == current_player);
             require(!hand_is_over);
             require(dealt);
+            require(player >= 0 && player < player_count);
+            require(!has_passed.at(player)); // a player that has passed can't draw anymore.
 
             assert(deck.size() > 0); // We are expecting the fuzzer to find this.
 
             int card = deck.back();
             deck.pop_back();
             player_hands.at(player).push_back(card);
-            update_current_player();
             
         }
 
         void pass(int player)
         {
-            require(player == current_player);
             require(!hand_is_over);
             require(dealt);
+            require(player >= 0 && player < player_count);
+            require(!has_passed.at(player)); // a player that has passed can't pass again.
 
             has_passed.at(player) = true;
-            update_current_player();
         }
 
         int calculate_winner()
@@ -110,8 +109,6 @@ class Blackjack
             std::cout << "Has passed: ";
             for (bool b : has_passed) std::cout << b << ", ";
             std::cout << "\n";
-
-            std::cout << "Current player: " << current_player << "\n";
         }
 
     class BlackjackException : public std::exception {};
@@ -121,22 +118,8 @@ class Blackjack
         std::vector<int> deck;
         std::vector<std::vector<int>> player_hands;
         std::vector<bool> has_passed;
-        int current_player;
         bool hand_is_over;
         bool dealt;
-
-        void update_current_player()
-        {
-            int count = 0; // used to avoid infinite loop when all players have passed.
-            do {
-                current_player = (current_player + 1) % player_count;
-                if(count == player_count) {
-                    hand_is_over = true;
-                    return;
-                }
-                count++;
-            } while(has_passed.at(current_player));
-        }
 
         int calculate_points(int player)
         {
