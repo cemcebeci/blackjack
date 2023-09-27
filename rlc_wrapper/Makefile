@@ -1,12 +1,24 @@
 RLC=/home/ccebeci/rlc/rlc-infrastructure/rlc-debug/tool/rlc/rlc
 
-all: bin/rlc_driver bin/c_driver bin/fuzzer bin/runner
+all: bin/rlc_driver bin/c_driver bin/fuzzer_static_64 bin/runner_static_64 bin/fuzzer_static_4 bin/runner_static_4 bin/fuzzer_static_64 bin/runner_static_4 bin/fuzzer_dynamic bin/runner_dynamic
 
-bin/runner: fuzz_target.cpp obj/class_to_global_functions.o obj/rlc_wrapper_nomain.o include/rlc_names.h
-	clang++ fuzz_target.cpp obj/class_to_global_functions.o obj/rlc_wrapper_nomain.o -o bin/runner 
+bin/runner_static_64: fuzz_targets/static_64_bits.cpp obj/class_to_global_functions.o obj/rlc_wrapper_nomain.o include/rlc_names.h
+	clang++ fuzz_targets/static_64_bits.cpp obj/class_to_global_functions.o obj/rlc_wrapper_nomain.o -o bin/runner_static_64 
 
-bin/fuzzer: fuzz_target.cpp obj/class_to_global_functions.o obj/rlc_wrapper_nomain.o include/rlc_names.h
-	clang++ fuzz_target.cpp obj/class_to_global_functions.o obj/rlc_wrapper_nomain.o -o bin/fuzzer -DFUZZING -fsanitize=fuzzer,address
+bin/fuzzer_static_64: fuzz_targets/static_64_bits.cpp obj/class_to_global_functions.o obj/rlc_wrapper_nomain.o include/rlc_names.h
+	clang++ fuzz_targets/static_64_bits.cpp obj/class_to_global_functions.o obj/rlc_wrapper_nomain.o -o bin/fuzzer_static_64 -DFUZZING -fsanitize=fuzzer,address
+
+bin/runner_static_4: fuzz_targets/static_4_bits.cpp obj/class_to_global_functions.o obj/rlc_wrapper_nomain.o include/rlc_names.h
+	clang++ fuzz_targets/static_4_bits.cpp obj/class_to_global_functions.o obj/rlc_wrapper_nomain.o -o bin/runner_static_4 
+
+bin/fuzzer_static_4: fuzz_targets/static_4_bits.cpp obj/class_to_global_functions.o obj/rlc_wrapper_nomain.o include/rlc_names.h
+	clang++ fuzz_targets/static_4_bits.cpp obj/class_to_global_functions.o obj/rlc_wrapper_nomain.o -o bin/fuzzer_static_4 -DFUZZING -fsanitize=fuzzer,address
+
+bin/runner_dynamic: fuzz_targets/dynamic.cpp obj/class_to_global_functions.o obj/rlc_wrapper_nomain.o include/rlc_names.h
+	clang++ fuzz_targets/dynamic.cpp obj/class_to_global_functions.o obj/rlc_wrapper_nomain.o -o bin/runner_dynamic 
+
+bin/fuzzer_dynamic: fuzz_targets/dynamic.cpp obj/class_to_global_functions.o obj/rlc_wrapper_nomain.o include/rlc_names.h
+	clang++ fuzz_targets/dynamic.cpp obj/class_to_global_functions.o obj/rlc_wrapper_nomain.o -o bin/fuzzer_dynamic -DFUZZING -fsanitize=fuzzer,address
 
 bin/c_driver: obj/class_to_global_functions.o obj/driver.o obj/rlc_wrapper_nomain.o include/rlc_names.h
 	clang++ obj/class_to_global_functions.o obj/driver.o obj/rlc_wrapper_nomain.o -o bin/c_driver
