@@ -6,6 +6,10 @@
 #include <vector>
 #include <cassert>
 
+#ifndef SUIT_COUNT
+    #define SUIT_COUNT 4
+#endif
+
 
 class Blackjack 
 {
@@ -19,11 +23,8 @@ class Blackjack
         {
             for (int i = 1; i <= 13; i++)
             {
-                // once for each suit
-                deck.push_back(i);
-                deck.push_back(i);
-                deck.push_back(i);
-                deck.push_back(i);
+                for(int j = 0; j < SUIT_COUNT; j++)
+                    deck.push_back(i);
             }
         }
         
