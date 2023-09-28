@@ -1,4 +1,5 @@
 ext fun Blackjack_new(Int player_count) -> Int
+ext fun Blackjack_delete(Int address)
 ext fun Blackjack_shuffle(Int address)
 ext fun Blackjack_deal(Int address)
 ext fun Blackjack_draw(Int address, Int player)
@@ -47,6 +48,7 @@ act blackjack(Int num_players):
             Blackjack_draw(blackjack, actual_player_index)
     
     Blackjack_dump_state(blackjack)
+    Blackjack_delete(blackjack)
 
 fun main() -> Int:
     let blackjack = blackjack(2)

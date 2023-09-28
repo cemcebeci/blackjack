@@ -14,6 +14,10 @@ extern "C" void Blackjack_newint64_t_int64_t_(int64_t * __result, int64_t * play
     *__result = (int64_t) (void *)new Blackjack(*player_count);
 }
 
+extern "C" void Blackjack_deletevoid_int64_t_(int64_t * address) {
+    delete (Blackjack *)(void *)*address;
+}
+
 extern "C" void Blackjack_shufflevoid_int64_t_(int64_t *address) {
     ((Blackjack *)(void *)*address)->shuffle_deck();
 }

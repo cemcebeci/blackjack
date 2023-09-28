@@ -84,8 +84,11 @@ extern "C" int LLVMFuzzerTestOneInput(const char *Data, size_t Size) {
             is_donebool_blackjackEntity_(&isDone, &blackjack);
         }
     } catch (Blackjack::BlackjackException) {
+        Blackjack_deletevoid_int64_t_((int64_t *)(void **)&blackjack.blackjack);
         return 0;    
     }
+    if(!isDone)
+        Blackjack_deletevoid_int64_t_((int64_t *)(void **)&blackjack.blackjack);
     return 0;
 }
 

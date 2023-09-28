@@ -14,7 +14,7 @@ for suit_count in suit_count_values:
     for fuzzer_name in ['bin/fuzzer_static_4', 'bin/fuzzer_static_64', 'bin/fuzzer_dynamic']:
         start = time.time()
         for i in range(repeat_count):
-            run(f'{fuzzer_name} -detect_leaks=0 >/dev/null 2>&1', shell=True)
+            run(f'{fuzzer_name} >/dev/null 2>&1', shell=True)
         end = time.time()
         avg = (end - start) / repeat_count
         runtimes[fuzzer_name].append(avg)
